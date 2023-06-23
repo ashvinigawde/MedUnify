@@ -1,0 +1,110 @@
+﻿@page "/patientList"
+@inject HttpClient Http
+@using Blazorise
+@using Blazorise.DataGrid
+@using System.Linq
+
+<PageTitle>Patient List</PageTitle>
+
+<h1>Patients</h1>
+
+@if (patients == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <Alert Color="Color.Success" @bind-Visible="@visible" Dismisable="true" class="col-md-3">
+        <AlertMessage>
+            @msg
+        </AlertMessage>    <CloseButton AutoClose="true" />
+    </Alert>
+
+    <DataGrid TItem="PatientModel" Data="@patients" Editable Sortable Filterable ShowPager @bind-SelectedRow="@selectedPatient" RowRemoved="OnRowRemoved" RowUpdated="OnRowUpdating" PageSize="2" EditMode=DataGridEditMode.Popup>
+        <DataGridColumns>
+            <DataGridColumn Caption="Sr.No" Filterable="false">
+                <DisplayTemplate>
+                    @(patients.IndexOf(context!)+1)
+                </DisplayTemplate>
+            </DataGridColumn>
+            <DataGridColumn Field="@nameof(PatientModel.FirstName)" Caption="Name" Editable="true" />
+
+            <DataGridColumn Field="@nameof(PatientModel.LastName)" Caption="LastName" Editable />
+
+            <DataGridColumn Field="@nameof(PatientModel.Address)" Caption="Address" Editable />
+            <DataGridColumn Field="@nameof(PatientModel.State)" Caption="State" Editable />
+            <DataGridColumn Field="@nameof(PatientModel.City)" Caption="City" Editable />
+            <DataGridColumn Field="@nameof(PatientModel.CreatedAt)" Caption="Reg. Date">
+                <DisplayTemplate>
+                    @((context as PatientModel)!.CreatedAt.ToShortDateString())
+
+                </DisplayTemplate>
+
+            </DataGridColumn>
+            <DataGridCommandColumn TItem="PatientModel" ShowCaption="true" Caption="Action" NewCommandAllowed="false">
+                <EditCommandTemplate>
+                    <Button class="btn btn-primary btn-sm" Clicked="@context.Clicked">Edit</Button>
+                   
+                </EditCommandTemplate>
+                <DeleteCommandTemplate>
+                    <Button class="btn btn-danger btn-sm" Clicked="@context.Clicked">Delete</Button>
+
+                </DeleteCommandTemplate>
+
+            </DataGridCommandColumn>
+
+            </DataGridColumns>
+
+    
+    </DataGrid>
+}
+
+@code {
+    private int srNo = 0;
+    private List<PatientModel>? patients;
+    private PatientModel? selectedPatient;
+    bool visible = false;
+    private string msg = "";
+
+    private int GetSerialNumber()
+    {
+        return srNo++;
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        srNo = 0;
+        msg = "";
+        visible = false;
+        patients = await Http.GetFromJsonAsync<List<PatientModel>>("https://localhost:7228/api/Patient");
+    }
+
+    async Task OnRowRemoved(PatientModel e)
+    {
+        var response = await Http.DeleteFromJsonAsync<int>("https://localhost:7228/api/Patient/"+e.Id);
+        visible = !visible;
+        if (response>0)
+        {
+            msg = "Deleted Successfully!";
+        }
+        else
+        {
+            msg = "Error";
+        }
+
+    }
+    async Task OnRowUpdating(SavedRowItem<PatientModel, Dictionary<string, object>> e)
+    {
+        var patient = e.Item;
+        var response = await Http.PutAsJsonAsync("https://localhost:7228/api/Patient", patient);
+        visible = !visible;
+        if (response.IsSuccessStatusCode)
+        {
+            msg = "Updated Successfully!";
+        }
+        else
+        {
+            msg = "Error";
+        }
+
+    }
+}

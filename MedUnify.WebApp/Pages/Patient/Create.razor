@@ -1,0 +1,81 @@
+﻿@page "/addPatient"
+@inject HttpClient Http
+
+<PageTitle>Add Patient</PageTitle>
+
+<form class="col-md-4 offset-md-2">
+    <div class="form-group mb-2">
+        <label for="firstName">First Name:</label>
+        <input type="text" class="form-control" id="firstName" @bind="@patient.FirstName" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="lastName">Last Name:</label>
+        <input type="text" class="form-control" id="lastName" @bind="@patient.LastName" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="address">Address:</label>
+        <input type="text" class="form-control" id="address" @bind="@patient.Address" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="state">State:</label>
+        <input type="text" class="form-control" id="state" @bind="@patient.State" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="city">City:</label>
+        <input type="text" class="form-control" id="city" @bind="@patient.City" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="organizationId">Organization:</label>
+        <select class="form-control" id="organizationId" @bind="@patient.OrganizationId">
+            <option value="0" name="Select Organization" />
+            @foreach (var organization in organizations)
+            {
+                <option value="@organization.Id">@organization.Name</option>
+            }
+        </select>
+    </div>
+
+    <button type="button" class="btn btn-primary mb-2 float-end" @onclick="AddPatient">Submit</button>
+</form>
+
+<Alert Color="Color.Success" @bind-Visible="@visible" Dismisable="true" class="col-md-3">
+    <AlertMessage>
+        @displayMsg
+    </AlertMessage>    <CloseButton AutoClose="true" />
+</Alert>
+
+
+@code {
+    private PatientModel patient = new();
+    private List<OrganizationModel>? organizations = new List<OrganizationModel>();
+    bool visible = false;
+    private string displayMsg = "";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        visible = false;
+        await LoadOrganizations();
+    }
+
+    private async Task LoadOrganizations()
+    {
+        organizations = await Http.GetFromJsonAsync<List<OrganizationModel>>("https://localhost:7228/api/organisation");
+        await Task.CompletedTask;
+    }
+    private async Task AddPatient()
+    {
+        var response = await Http.PostAsJsonAsync("https://localhost:7228/api/Patient", patient);
+        visible = !visible;
+
+        if (response.IsSuccessStatusCode)
+        {
+            patient = new(); 
+            displayMsg = "Updated Successfully!";
+        }
+        else
+        {
+            displayMsg = "Error";
+        }
+    }
+}

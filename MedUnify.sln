@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedUnify.WebApp", "MedUnify.WebApp\MedUnify.WebApp.csproj", "{FB3879EC-9FB1-4FCA-8076-C747E225C302}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedUnify.WebApi", "MedUnify.WebApi\MedUnify.WebApi.csproj", "{CEAA892D-F7FE-420D-8E97-2CDE2B0BB092}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB3879EC-9FB1-4FCA-8076-C747E225C302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB3879EC-9FB1-4FCA-8076-C747E225C302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB3879EC-9FB1-4FCA-8076-C747E225C302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB3879EC-9FB1-4FCA-8076-C747E225C302}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEAA892D-F7FE-420D-8E97-2CDE2B0BB092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEAA892D-F7FE-420D-8E97-2CDE2B0BB092}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEAA892D-F7FE-420D-8E97-2CDE2B0BB092}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEAA892D-F7FE-420D-8E97-2CDE2B0BB092}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4B82EF3-A58C-483B-8BAB-81DE4C51EB73}
+	EndGlobalSection
+EndGlobal
